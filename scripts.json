@@ -78,10 +78,10 @@
     "info": "Помощник для сбора счастливой травки. Активация /travka"
   },
   {
-    "name": "#AntiAFK_1.4_byAIR.asi",
+    "name": "AntiAFK_1.4_byAIR.asi",
     "ver": null,
     "info": "Анти-афк аризона. Активация автоматическая",
-    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/#AntiAFK_1.4_byAIR.asi"
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/AntiAFK_1.4_byAIR.asi"
   },
   {
     "name": "SkipDeviceSelection.asi",
