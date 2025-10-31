@@ -28,5 +28,53 @@
         "ver": "0.2.6",
         "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Lesorub-Helper2.5.lua",
         "info": "Xелпер для деревьев возле льна и хлопка. Активация /les"
-    }
+    },
+    {
+        "name": "[JF] Deer Hunter.lua",
+        "ver": "1.1.0",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/[JF] Deer Hunter.lua",
+        "info": "Wallhack на новых оленей. Активация /dhunt"
+    },
+    {
+        "name": "drova",
+        "ver": "0.0.1",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/drova.lua",
+        "info": "Xелпер для лесопилки. Активация /drova"
+    },
+    {
+        "name": "FastOpenRoulette",
+        "ver": "0.0.1",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/FastOpenRoulette.lua",
+        "info": "Быстрое открытие обновленных рулеток на аризона рп"
+    },
+    {
+        "name": "Gribi",
+        "ver": "0.0.1",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Gribi.lua",
+        "info": "Вх на грибы. Активация /gribs"
+    },
+    {
+        "name": "LenAutoALT by LUK update",
+        "ver": "0.0.1",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/LenAutoALT by LUK update.lua",
+        "info": "Авто ALT на льне и хлопке. Активация /len и /xlop"
+    },
+    {
+        "name": "Pidurok_wh_hotel",
+        "ver": "0.0.1",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Pidurok_wh_hotel.lua",
+        "info": "Вх на подарки в отели. Активация /hwh"
+    },
+    {
+        "name": "travka",
+        "ver": "0.0.1",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/travka.lua",
+        "info": "Помощник для сбора счастливый ставки. Активация /travka"
+    },
+    {
+        "name": "LenAutoALT by LUK update",
+        "ver": "0.0.1",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/LenAutoALT by LUK update.lua",
+        "info": "Авто ALT на льне и хлопке. Активация /len и /xlop"
+    },
 ]
