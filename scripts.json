@@ -70,11 +70,5 @@
         "ver": "0.0.1",
         "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/travka.lua",
         "info": "Помощник для сбора счастливый ставки. Активация /travka"
-    },
-    {
-        "name": "LenAutoALT by LUK update",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/LenAutoALT by LUK update.lua",
-        "info": "Авто ALT на льне и хлопке. Активация /len и /xlop"
-    },
+    }
 ]
