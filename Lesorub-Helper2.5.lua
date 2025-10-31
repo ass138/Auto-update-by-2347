@@ -7,7 +7,7 @@
 --                                             |__|                                  |__|            
 
 script_name('Lesorub-Helper2.5.lua')
-script_version("0.2.5")
+script_version("0.2.6")
 script_authors('TG @Qwestonsz')
 script_url('https://www.blast.hk/members/464512/')
 
