@@ -1,91 +1,85 @@
 [
-    {
-        "name": "ArzMarket_Loader",
-        "ver": "nil",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/ArzMarket_Loader.lua",
-        "info": "Arizona Market! Многофункциональный скрипт для ЦР и не только. Активация /crr"
-    },
-    {
-        "name": "MiniCrHelper",
-        "ver": "0.4.2",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/MiniCrHelper.lua",
-        "info": "Универсальный хелпер для Аризоны. Активация /cr"
-    },
-    {
-        "name": "Fast-rec",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Fast-rec.lua",
-        "info": "Быстрый перезаход на нужное место спавна. Активация при открытии чата"
-    },
-    {
-        "name": "fastboot",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/fastboot.lua",
-        "info": "Быстрая загрузка игры. Активация автоматическая"
-    },
-    {
-        "name": "kazik",
-        "ver": "0.0.1",
-        "link": "",
-        "info": "Бот для Однорукого Бандита в казино. Активация /kazik"
-    },
-    {
-        "name": "Lesorub-Helper2.5",
-        "ver": "0.2.6",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Lesorub-Helper2.5.lua",
-        "info": "Xелпер для деревьев возле льна и хлопка. Активация /les"
-    },
-    {
-        "name": "[JF] Deer Hunter.lua",
-        "ver": "1.1.0",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/[JF] Deer Hunter.lua",
-        "info": "Wallhack на новых оленей. Активация /dhunt"
-    },
-    {
-        "name": "drova",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/drova.lua",
-        "info": "Xелпер для лесопилки. Активация /drova"
-    },
-    {
-        "name": "FastOpenRoulette",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/FastOpenRoulette.lua",
-        "info": "Быстрое открытие обновленных рулеток на аризона рп"
-    },
-    {
-        "name": "Gribi",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Gribi.lua",
-        "info": "Вх на грибы. Активация /gribs"
-    },
-    {
-        "name": "LenAutoALT by LUK update",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/LenAutoALT by LUK update.lua",
-        "info": "Авто ALT на льне и хлопке. Активация /len и /xlop"
-    },
-    {
-        "name": "Pidurok_wh_hotel",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Pidurok_wh_hotel.lua",
-        "info": "Вх на подарки в отели. Активация /hwh"
-    },
-    {
-        "name": "travka",
-        "ver": "0.0.1",
-        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/travka.lua",
-        "info": "Помощник для сбора счастливый травки. Активация /travka"
-    },
-    {
+  {
+    "name": "ArzMarket_Loader",
+    "ver": null,
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/ArzMarket_Loader.lua",
+    "info": "Arizona Market! Многофункциональный скрипт для ЦР и не только. Активация /crr"
+  },
+  {
+    "name": "MiniCrHelper",
+    "ver": "0.4.2",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/MiniCrHelper.lua",
+    "info": "Универсальный хелпер для Аризоны. Активация /cr"
+  },
+  {
+    "name": "Fast-rec",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Fast-rec.lua",
+    "info": "Быстрый перезаход на нужное место спавна. Активация при открытии чата"
+  },
+  {
+    "name": "fastboot",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/fastboot.lua",
+    "info": "Быстрая загрузка игры. Активация автоматическая"
+  },
+  {
+    "name": "kazik",
+    "ver": "0.0.1",
+    "link": "",
+    "info": "Бот для Однорукого Бандита в казино. Активация /kazik"
+  },
+  {
+    "name": "Lesorub-Helper2.5",
+    "ver": "0.2.6",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Lesorub-Helper2.5.lua",
+    "info": "Хелпер для деревьев возле льна и хлопка. Активация /les"
+  },
+  {
+    "name": "[JF] Deer Hunter.lua",
+    "ver": "1.1.0",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/[JF] Deer Hunter.lua",
+    "info": "Wallhack на новых оленей. Активация /dhunt"
+  },
+  {
+    "name": "drova",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/drova.lua",
+    "info": "Хелпер для лесопилки. Активация /drova"
+  },
+  {
+    "name": "FastOpenRoulette",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/FastOpenRoulette.lua",
+    "info": "Быстрое открытие обновленных рулеток на Аризоне"
+  },
+  {
+    "name": "Gribi",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Gribi.lua",
+    "info": "ВХ на грибы. Активация /gribs"
+  },
+  {
+    "name": "LenAutoALT by LUK update",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/LenAutoALT by LUK update.lua",
+    "info": "Авто ALT на льне и хлопке. Активация /len и /xlop"
+  },
+  {
+    "name": "Pidurok_wh_hotel",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Pidurok_wh_hotel.lua",
+    "info": "ВХ на подарки в отелях. Активация /hwh"
+  },
+  {
+    "name": "travka",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/travka.lua",
+    "info": "Помощник для сбора счастливой травки. Активация /travka"
+  },
+  {
     "name": "CleoPlus.asi",
-    "ver": "1.2",
-    "info": "Библиотека CLEO+ для GTA SA (ASI-плагин)",
-    "link": "https://example.com/files/CleoPlus.asi"
-    },
-    {
-    "name": "CleoPlus.asi",
-    "ver": "1.2",
+    "ver": null,
     "info": "Библиотека CLEO+ для GTA SA (ASI-плагин)",
     "link": "https://example.com/files/CleoPlus.asi"
   }
