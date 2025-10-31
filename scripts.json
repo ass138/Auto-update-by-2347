@@ -1,11 +1,5 @@
 [
   {
-    "name": "ArzMarket_Loader",
-    "ver": null,
-    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/ArzMarket_Loader.lua",
-    "info": "Arizona Market! Многофункциональный скрипт для ЦР и не только. Активация /crr"
-  },
-  {
     "name": "MiniCrHelper",
     "ver": "0.4.2",
     "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/MiniCrHelper.lua",
@@ -77,16 +71,4 @@
     "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/travka.lua",
     "info": "Помощник для сбора счастливой травки. Активация /travka"
   },
-  {
-    "name": "AntiAFK_1.4_byAIR.asi",
-    "ver": null,
-    "info": "Анти-афк аризона. Активация автоматическая",
-    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/AntiAFK_1.4_byAIR.asi"
-  },
-  {
-    "name": "SkipDeviceSelection.asi",
-    "ver": null,
-    "info": "Авто-выбор разрешения для ARZ. Активация автоматическая",
-    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/SkipDeviceSelection.asi"
-  }
 ]
