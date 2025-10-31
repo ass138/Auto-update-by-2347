@@ -51,7 +51,7 @@
     "name": "FastOpenRoulette",
     "ver": "0.0.1",
     "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/FastOpenRoulette.lua",
-    "info": "Быстрое открытие обновленных рулеток на Аризоне"
+    "info": "Быстрое открытие обновленных рулеток на Аризоне. Активация автоматическая"
   },
   {
     "name": "Gribi",
@@ -78,9 +78,15 @@
     "info": "Помощник для сбора счастливой травки. Активация /travka"
   },
   {
-    "name": "CleoPlus.asi",
+    "name": "#AntiAFK_1.4_byAIR.asi",
     "ver": null,
-    "info": "Библиотека CLEO+ для GTA SA (ASI-плагин)",
-    "link": "https://example.com/files/CleoPlus.asi"
+    "info": "Анти-афк аризона. Активация автоматическая",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/#AntiAFK_1.4_byAIR.asi"
+  },
+  {
+    "name": "SkipDeviceSelection.asi",
+    "ver": null,
+    "info": "Авто-выбор разрешения для ARZ. Активация автоматическая",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/SkipDeviceSelection.asi"
   }
 ]
