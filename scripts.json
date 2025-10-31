@@ -2,35 +2,30 @@
     {
         "name": "MiniCrHelper",
         "ver": "0.4.2",
-        "author": "- |2347| -",
         "link": "",
         "info": "Универсальный хелпер для Аризоны. Активация /cr"
     },
     {
         "name": "Fast-rec",
         "ver": "0.0.1",
-        "author": "- |2347| -",
         "link": "",
         "info": "Быстрый перезаход на нужное место спавна. Активация при открытии чата"
     },
     {
         "name": "fastboot",
         "ver": "0.0.1",
-        "author": "- |2347| -",
         "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/fastboot.lua",
         "info": "Быстрая загрузка игры. Активация автоматическая"
     },
     {
         "name": "kazik",
         "ver": "0.0.1",
-        "author": "- |2347| -",
         "link": "",
         "info": "Бот для Однорукого Бандита в казино. Активация /kazik"
     },
     {
         "name": "Lesorub-Helper2.5",
         "ver": "0.2.6",
-        "author": "- |2347| -",
         "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Lesorub-Helper2.5.lua",
         "info": "Xелпер для деревьев возле льна и хлопка. Активация /les"
     }
