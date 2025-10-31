@@ -1,7 +1,7 @@
 [
     {
         "name": "ArzMarket_Loader",
-        "ver": "9.0.1",
+        "ver": nil,
         "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/ArzMarket_Loader.lua",
         "info": "Arizona Market! Многофункциональный скрипт для ЦР и не только. Активация /crr"
     },
@@ -76,5 +76,17 @@
         "ver": "0.0.1",
         "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/travka.lua",
         "info": "Помощник для сбора счастливый травки. Активация /travka"
-    }
+    },
+    {
+    "name": "CleoPlus.asi",
+    "ver": "1.2",
+    "info": "Библиотека CLEO+ для GTA SA (ASI-плагин)",
+    "link": "https://example.com/files/CleoPlus.asi"
+  },
+  {
+    "name": "CleoPlus.asi",
+    "ver": "1.2",
+    "info": "Библиотека CLEO+ для GTA SA (ASI-плагин)",
+    "link": "https://example.com/files/CleoPlus.asi"
+  }
 ]
