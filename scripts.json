@@ -2,13 +2,13 @@
     {
         "name": "MiniCrHelper",
         "ver": "0.4.2",
-        "link": "",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/MiniCrHelper.lua",
         "info": "Универсальный хелпер для Аризоны. Активация /cr"
     },
     {
         "name": "Fast-rec",
         "ver": "0.0.1",
-        "link": "",
+        "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Fast-rec.lua",
         "info": "Быстрый перезаход на нужное место спавна. Активация при открытии чата"
     },
     {
