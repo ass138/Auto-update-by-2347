@@ -1,5 +1,5 @@
 script_name('Fast-rec.lua')
-script_version("0.0.0")
+script_version("0.0.1")
 script_authors('TG @Qwestonsz')
 script_url('https://www.blast.hk/members/464512/')
 
