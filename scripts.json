@@ -84,6 +84,12 @@
     "info": "Калькулятор работает в чате"
   },
   {
+    "name": "MoneySeparator",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/MoneySeparator.lua",
+    "info": "Разделение цен точками"
+  },
+  {
     "name": "CamHack",
     "ver": "0.0.1",
     "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/camhack.lua",
