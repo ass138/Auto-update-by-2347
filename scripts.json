@@ -78,6 +78,12 @@
     "info": "/st - время /sw - погода /bt /bw запретить/разрешить смену времени/погоды сервером"
   },
   {
+    "name": "Chat-Calculator",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/Chat-Calculator.lua",
+    "info": "Калькулятор работает в чате"
+  },
+  {
     "name": "CamHack",
     "ver": "0.0.1",
     "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/camhack.lua",
