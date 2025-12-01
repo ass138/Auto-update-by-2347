@@ -90,6 +90,18 @@
     "info": "Разделение цен точками"
   },
   {
+    "name": "win",
+    "ver": "0.0.1",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/win.lua",
+    "info": "Активация: /full – фулл; /win – окно; /winq – другой монитор; /block – блок разворота"
+  },
+  {
+    "name": "MiningToolFixed",
+    "ver": "1.0.6",
+    "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/MiningToolFixed.lua",
+    "info": "Активация: /mnt - Включает/выключает показ окна."
+  },
+  {
     "name": "CamHack",
     "ver": "0.0.1",
     "link": "https://github.com/ass138/Auto-update-by-2347/raw/refs/heads/main/camhack.lua",
