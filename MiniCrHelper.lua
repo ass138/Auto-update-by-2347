@@ -1,5 +1,5 @@
 script_name('ЗАЛУПА HELPER.lua')
-script_version('0.4.3')
+script_version('0.4.4')
 script_url('TG @IIzIIIzIVzVII')
 
 require 'lib.moonloader'
@@ -10,12 +10,13 @@ encoding.default = 'CP1251'
 u8 = encoding.UTF8
 
 local mainIni = inicfg.load({
-    main = { nickrecons = '', serverrecon = '', speedrunning = false, autoeat = false,  autospawnbot = false}
+    main = { nickrecons = '', serverrecon = '', speedrunning = false, autoeat = false, fastrunm = false, autospawnbot = false}
 }, 'MiniCrHelper/MiniHelper-CR.ini')
 
 local new, str = imgui.new, ffi.string
 local font = renderCreateFont('Arial', 15, 14)
 local window, speedrunning, autoeat, autospawnbot, showdebug, debugwh3d = new.bool(), new.bool(mainIni.main.speedrunning), new.bool(mainIni.main.autoeat), new.bool(mainIni.main.autospawnbot), imgui.new.bool(), new.bool()
+local fastrunm = new.bool(mainIni.main.fastrunm)
 local sw, sh = getScreenResolution()
 local nickrecons, serverrecon, piska, recentMessages, onShowDialogwqq, recentMessages = '', '', 0, {}, '', {}
 
@@ -40,8 +41,13 @@ imgui.OnFrame(function() return window[0] end, function(player)
         inicfg.save(mainIni, "MiniCrHelper/MiniHelper-CR")
     end
 
-    if imgui.Checkbox(u8'Быстрый бег и езда', speedrunning) then
+    if imgui.Checkbox(u8'Быстрый бег', speedrunning) then
         mainIni.main.speedrunning = speedrunning[0]
+        inicfg.save(mainIni, "MiniCrHelper/MiniHelper-CR")
+    end
+
+    if imgui.Checkbox(u8'Бег если сытость ниже 20%', fastrunm) then
+        mainIni.main.fastrunm = fastrunm[0]
         inicfg.save(mainIni, "MiniCrHelper/MiniHelper-CR")
     end
 
@@ -59,8 +65,8 @@ imgui.OnFrame(function() return showdebug[0] end, function()
     imgui.Begin('Debug', showdebug, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse + imgui.WindowFlags.AlwaysAutoResize)
 
     imgui.Checkbox(u8'3D text-key Q', debugwh3d)
-    imgui.SameLine()
-    imgui.Button(u8'Коды клавиш')
+    --imgui.SameLine()
+    --imgui.Button(u8'Коды клавиш')
     imgui.Separator()
 
     local function textList(label, list)
@@ -122,6 +128,7 @@ function main()
     lua_thread.create(wh3dtext)
     lua_thread.create(whplay)
     lua_thread.create(spawnbot)
+    lua_thread.create(fastrun)
 
 
 
@@ -137,6 +144,23 @@ function main()
     end
 end
 
+function fastrun()
+    local m_bLookingAtPlayer = ffi.cast("uint8_t*", 0xB6F028 + 0x2B)
+	local m_pPlayerPed = ffi.cast("uintptr_t*", 0xB6F5F0)
+    while true do wait(0)
+        if fastrunm[0] then
+            if m_bLookingAtPlayer[0] == 1 then
+                if not isCharSittingInAnyCar(PLAYER_PED) and isButtonPressed(PLAYER_HANDLE, 16) then
+                    local m_pPlayerData = ffi.cast("uintptr_t*", m_pPlayerPed[0] + 0x480)
+                    local m_fSprintEnergy = ffi.cast("float*", m_pPlayerData[0] + 0x1C)
+                    if m_fSprintEnergy[0] < 1 then
+                        m_fSprintEnergy[0] = 1
+                    end
+                end
+            end
+        end
+    end
+end
 
 function spawnbot()
     while true do wait(0)
