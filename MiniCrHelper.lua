@@ -1,5 +1,5 @@
 script_name('ÇÀËÓÏÀ HELPER.lua')
-script_version('0.4.4')
+script_version('0.4.5')
 script_url('TG @IIzIIIzIVzVII')
 
 require 'lib.moonloader'
@@ -129,6 +129,7 @@ function main()
     lua_thread.create(whplay)
     lua_thread.create(spawnbot)
     lua_thread.create(fastrun)
+    lua_thread.create(updatevc)
 
 
 
@@ -141,6 +142,59 @@ function main()
         end
         cameraSetLerpFov(90, 90, 1000, 1)
         Memory.setint8(0xB7CEE4, 1)
+    end
+end
+
+function evalanon(c) evalcef(("(()=>{%s})()"):format(c)) end
+function evalcef(c,e)
+    local bs=raknetNewBitStream()
+    raknetBitStreamWriteInt8(bs,17)
+    raknetBitStreamWriteInt32(bs,0)
+    raknetBitStreamWriteInt16(bs,#c)
+    raknetBitStreamWriteInt8(bs,e or 0)
+    raknetBitStreamWriteString(bs,c)
+    raknetEmulPacketReceiveBitStream(220,bs)
+    raknetDeleteBitStream(bs)
+end
+
+function addTextRightFromOnline(t)
+    evalanon(([[ 
+        let b=document.querySelector('.player-info__users-online');
+        if(!b)return;
+        let e=b.querySelector('.custom-online-right');
+        let parts=`%s`.split(" ");
+        if(e){e.querySelector('.caption').innerText=parts[0]+":"; e.querySelector('.value').innerText=parts[1]||""; return;}
+        let s=document.createElement('span');
+        s.className='custom-online-right';
+        s.style.marginLeft='10px';
+        s.style.whiteSpace='nowrap';
+        s.innerHTML='<span class="player-info__user-id-caption caption">'+parts[0]+':</span> <span class="player-info__user-id-value value">'+(parts[1]||"")+'</span>';
+        b.querySelector('.player-info__users-online-count').after(s);
+    ]]):format(t))
+end
+
+function asyncHttpRequest(m,u,a,r,j)
+    local thr=effil.thread(function(m,u,a)
+        local ok,res=pcall(require'requests'.request,m,u,a)
+        if ok then if res then res.json,res.xml=nil,nil end; return true,res else return false,res end
+    end)(m,u,a)
+    r=r or function() end j=j or function() end
+    lua_thread.create(function()
+        while true do
+            local s,err=thr:status()
+            if err then j(err); return end
+            if s=='completed' then local ok,res=thr:get(); if ok then r(res) else j(res) end; return end
+            if s=='canceled' then j(s); return end
+            wait(0)
+        end
+    end)
+end
+
+function updatevc()
+    while true do
+        wait(10000)
+        asyncHttpRequest('GET',"https://n-api.arizona-rp.com/api/servers/vc/online",{headers={["Referer"]="https://arizona-rp.com/"}},
+        function(resp) if resp and resp.text then addTextRightFromOnline("VC "..resp.text) end end)
     end
 end
 
