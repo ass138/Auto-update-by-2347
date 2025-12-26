@@ -1,11 +1,10 @@
 script_name('Chat-Calculator.lua')
-script_version("0.0.1")
+script_version("0.0.2")
 script_authors('Adrian G.')
 script_url('https://www.blast.hk/members/464512/')
 ----------------------------------------------------------------------------------------------------------------
 local imgui = require 'imgui'
 local window = imgui.ImBool(false)
-local window2 = imgui.ImBool(false)
 local encoding = require 'encoding'
 encoding.default = 'CP1251'
 u8 = encoding.UTF8
@@ -16,13 +15,22 @@ function main()
     while true do wait(0)
         text = sampGetChatInputText()
     
-        if text:find('%d+') and text:find('[-+/*^%%]') and not text:find('%a+') and text ~= nil then
-            ok, number = pcall(load('return '..text))
-            result = 'Результат: '..number
-            if not isKeyDown(0x08) then
-            setClipboardText(number)
+        if text:find('%d') and text:find('[-+/*^%%]') and text ~= nil then
+            local number = calculate_expression(text)
+            if number then
+                result = 'Результат: '..number
+                ok = true
+                if not isKeyDown(0x08) then
+                    --setClipboardText(number)
+                end
+            else
+                result = 'Ошибка в выражении'
+                ok = false
             end
         end
+
+
+        
 
         if text:find('%d+%%%*%d+') then
             number1, number2 = text:match('(%d+)%%%*(%d+)')
@@ -30,7 +38,7 @@ function main()
             ok, number = pcall(load('return '..number))
             result = 'Результат: '..number
             if not isKeyDown(0x08) and ok then
-            setClipboardText(number)
+            --setClipboardText(number)
             end
         end
 
@@ -40,7 +48,7 @@ function main()
             ok, number = pcall(load('return '..number))
             result = 'Результат: '..number
             if not isKeyDown(0x08) and ok then
-            setClipboardText(number)
+            --setClipboardText(number)
             end
         end
 
@@ -50,7 +58,7 @@ function main()
             ok, number = pcall(load('return '..number))
             result = 'Результат: '..number..'%'
             if not isKeyDown(0x08) and ok then
-                setClipboardText(number..'%')
+                --setClipboardText(number..'%')
             end
         end
 
@@ -71,6 +79,45 @@ function main()
     end
 end
 
+-- Преобразует строку вида "15.4ккк", "1,5кк" или "123к" в число
+function parse_number(str)
+    str = str:gsub(',', '.')  -- поддержка запятых
+    local multiplier = 1
+
+    if str:find('[кК][кК][кК]') then  -- "ккк" = 1 000 000 000
+        multiplier = 1000000000
+        str = str:gsub('[кК][кК][кК]', '')
+    elseif str:find('[кК][кК]') then  -- "кк" = 1 000 000
+        multiplier = 1000000
+        str = str:gsub('[кК][кК]', '')
+    elseif str:find('[кК]') then      -- "к" = 1 000
+        multiplier = 1000
+        str = str:gsub('[кК]', '')
+    end
+
+    local number = tonumber(str)
+    if not number then return nil end
+    return number * multiplier
+end
+
+-- Вычисляет выражение с числами и суффиксами
+function calculate_expression(expr)
+    -- Заменяем все числа с "ккк", "кк" или "к" на обычные числа
+    expr = expr:gsub('(%d+[.,]?%d*[кК]?[кК]?[кК]?)', function(n)
+        return parse_number(n) or n
+    end)
+    
+    -- Используем load для вычисления
+    local ok, result = pcall(load('return ' .. expr))
+    if ok then
+        return result
+    else
+        return nil
+    end
+end
+
+
+
 function imgui.OnDrawFrame()
     local input = sampGetInputInfoPtr()
     local input = getStructElement(input, 0x8, 4)
@@ -82,23 +129,17 @@ function imgui.OnDrawFrame()
         imgui.SetNextWindowSize(imgui.ImVec2(result:len()*10, 30))
         imgui.Begin('Solve', window, imgui.WindowFlags.NoTitleBar + imgui.WindowFlags.NoResize + imgui.WindowFlags.NoMove)
         imgui.CenterText(u8(number_separator(result)))
+
+        if imgui.IsItemClicked() then
+            -- Находит только цифры (и точку/запятую, если нужно)
+            local clean_number = tostring(result):match("%d+%.?%d*")
+            if clean_number then
+                sampAddChatMessage('Результат скопирован в буфер обмена', -1)
+                setClipboardText(clean_number)
+            end
+        end
         imgui.End()
     end
-        if sampIsChatInputActive() and help then
-            imgui.SetNextWindowPos(imgui.ImVec2(windowPosX, windowPosY + 30 + 15), imgui.Cond.FirstUseEver)
-            imgui.SetNextWindowSize(imgui.ImVec2(800, 130))
-            imgui.Begin('Help', window2, imgui.WindowFlags.NoTitleBar + imgui.WindowFlags.NoResize + imgui.WindowFlags.NoMove)
-            imgui.Text(u8[[23%/100 - найти число исходя из процента. 23 - это процент, 100 это сколько составляет этот процент от неизвестного числа.
-23 процента равные числу 100, в 100 процентах будет 434.
--
-23%*100 - найти число, которое составляет количество процентов. 23 - это количество процентов, 
-100 - число от которого нужно найти процент. 23 процента от числа 100 - это 23.
--
-23/100% - найти процентное соотношение двух чисел. 23 - это число, процентное соотношение от числа 100.
-Число 23 составляет 23 процента от числа 100.]])
-            imgui.End()
-        end
-    
 end
 
 function imgui.CenterText(text)
