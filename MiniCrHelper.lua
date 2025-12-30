@@ -1,5 +1,5 @@
 script_name('ЗАЛУПА HELPER.lua')
-script_version('0.4.7')
+script_version('0.4.8')
 script_url('TG @IIzIIIzIVzVII')
 
 require 'lib.moonloader'
@@ -134,6 +134,7 @@ function main()
 
 
     while true do wait(0)
+
         if wasKeyPressed(VK_F2) and not sampIsCursorActive() then
             window[0] = not window[0]
         end
@@ -150,6 +151,34 @@ function main()
         end
     end
 end
+
+
+--------------------------------------------------------------------------------------------------------------снег
+local imgui = require 'mimgui'
+local Particles = require 'Particles'
+
+local scrX, scrY = getScreenResolution()
+local particles_settings = {
+    gravity = 0.02,              -- Плавное падение
+    max_particles = 150,         -- Чуть больше частиц для густоты
+    max_distance = 0,            
+    boundary_behavior = "wrap",  
+    size = imgui.ImVec2(scrX, scrY),
+    speed = 0.05,                -- Очень медленно
+    wind = 0.01,                 -- Легкие колебания вбок
+    speed_variation = 0.03,      -- Разная скорость для каждой снежинки
+    size_variation = 2           -- Разная величина снежинок
+}
+
+local particles_background = Particles:new(particles_settings)
+imgui.OnFrame(function() return true end, function(self)
+    self.HideCursor = true
+    local scrX, scrY = getScreenResolution()
+    particles_background.size = imgui.ImVec2(scrX, scrY)
+    particles_background:update(imgui.GetMousePos())
+    particles_background:draw(imgui.GetBackgroundDrawList(), imgui.ImVec2(0,0))
+end)
+--------------------------------------------------------------------------------------------------------------снег
 
 ffi.cdef[[
 typedef unsigned long DWORD;
@@ -566,6 +595,8 @@ function sampev.onDisplayGameText(style, time, text)
     end
 end
 
+
+
 function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
     onShowDialogwqq = string.format("Текущая информация о диалоге:\nДиалог ID: %d \nДиалог тип: %d \nЗаголовок диалогового окна:\n%s\nТекст диалогового окна:\n%s", dialogId, style, title, text)
 
@@ -625,7 +656,15 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
         piska = tostring(os.time(datetime)) - os.time()
     end
 
+    local colors = {"{FF00FF}","{FFFF00}", "{00FF00}","{00FFFF}", }
+    local function randomFromList()
+        return colors[random(1, #colors)]
+    end
+
+
     text = text:gsub("{FFFFFF}Евро: {B83434}%[(%d+)%]%s*\n%s*{FFFFFF}BTC: {B83434}%[(%d+)%]","{FFFFFF}Евро: {B83434}[%1]  {FFFFFF}BTC: {B83434}[%2]")
+    text = text:gsub("{FFFFFF}Текущее состояние счета:%s*{FFFF00}(%d+)%s*AZ%-Coins",function(amount)return "{FFFFFF}Текущее состояние счета:\t" ..randomFromList() .. "" .. amount .. " AZ-Coins"end)
+
 
     local moneyAmount = 0
     local bankAmount = 0
@@ -634,10 +673,13 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
 
     for line in text:gmatch("[^\r\n]+") do
 
+        
         -- Пропускаем ненужную строку
-        if line:find('Шанс оглушения %(оглушающий плод%): {FF6347}Неактивен') then
+        if line:find('Шанс оглушения %(оглушающий плод%): {FF6347}Неактивен') or line:find('{FFFFFF}Авторизация на сервере:%s*{B83434}(%d%d:%d%d)%s*(%d%d%.%d%d%.%d%d%d%d)') then
             goto continue
         end
+
+
 
         newText = newText .. line .. "\n"
 
@@ -666,10 +708,7 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
 
             local totalAmount = bankAmount + depositAmount - 318000000
             local totalAmount1 = totalAmount + moneyAmount
-
-            newText = newText ..
-                "{FFFFFF}Общая сумма ДБ + ДД: {FF6347}[$" .. formatNumber(totalAmount) .. "]\n" ..
-                "{FFFFFF}Общая сумма ДБ + ДД + НД: {FF6347}[$" .. formatNumber(totalAmount1) .. "]\n"
+            newText = newText .."{FFFFFF}Общая сумма ДБ + ДД: {FF6347}[$" .. formatNumber(totalAmount) .. "]\n" .."{FFFFFF}Общая сумма ДБ + ДД + НД: {FF6347}[$" .. formatNumber(totalAmount1) .. "]\n"
         end
 
         ::continue::
@@ -685,4 +724,6 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
 
     return {dialogId, style, title, button1, button2, newText}
 end
+
+
 
