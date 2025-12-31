@@ -1,5 +1,5 @@
 script_name('ЗАЛУПА HELPER.lua')
-script_version('0.4.8')
+script_version('0.4.9')
 script_url('TG @IIzIIIzIVzVII')
 
 require 'lib.moonloader'
@@ -131,7 +131,7 @@ function main()
     lua_thread.create(updatevc)
     lua_thread.create(telegramz)
 
-
+    initSnow()
 
     while true do wait(0)
 
@@ -149,35 +149,50 @@ function main()
             local days = math.floor((os.time({day=d, month=m, year=y2}) - os.time()) / 86400)
             renderFontDrawText(font, 'Отель: ' .. days .. ' дн', x, y, 0xFF00FF00)
         end
+        updateSnow()
+        renderSnow()
     end
 end
 
 
 --------------------------------------------------------------------------------------------------------------снег
-local imgui = require 'mimgui'
-local Particles = require 'Particles'
+local snowflakes = {}
+local SNOW_COUNT = 500
 
-local scrX, scrY = getScreenResolution()
-local particles_settings = {
-    gravity = 0.02,              -- Плавное падение
-    max_particles = 150,         -- Чуть больше частиц для густоты
-    max_distance = 0,            
-    boundary_behavior = "wrap",  
-    size = imgui.ImVec2(scrX, scrY),
-    speed = 0.05,                -- Очень медленно
-    wind = 0.01,                 -- Легкие колебания вбок
-    speed_variation = 0.03,      -- Разная скорость для каждой снежинки
-    size_variation = 2           -- Разная величина снежинок
-}
+function initSnow()
+    local sx, sy = getScreenResolution()
+    snowflakes = {}
 
-local particles_background = Particles:new(particles_settings)
-imgui.OnFrame(function() return true end, function(self)
-    self.HideCursor = true
-    local scrX, scrY = getScreenResolution()
-    particles_background.size = imgui.ImVec2(scrX, scrY)
-    particles_background:update(imgui.GetMousePos())
-    particles_background:draw(imgui.GetBackgroundDrawList(), imgui.ImVec2(0,0))
-end)
+    for i = 1, SNOW_COUNT do
+        snowflakes[i] = {
+            x = math.random(0, sx),
+            y = math.random(0, sy),
+            speed = math.random() + 0.5,
+            size = math.random(1, 3)
+        }
+    end
+end
+
+function updateSnow()
+    local sx, sy = getScreenResolution()
+
+    for i = 1, #snowflakes do
+        local s = snowflakes[i]
+        s.y = s.y + s.speed
+
+        if s.y > sy then
+            s.y = 0
+            s.x = math.random(0, sx)
+        end
+    end
+end
+
+function renderSnow()
+    for i = 1, #snowflakes do
+        local s = snowflakes[i]
+        renderDrawBox(s.x, s.y, s.size, s.size, 0xFFFFFFFF)
+    end
+end
 --------------------------------------------------------------------------------------------------------------снег
 
 ffi.cdef[[
