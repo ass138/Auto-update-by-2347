@@ -1,5 +1,5 @@
 script_name('ÇÀËÓÏÀ HELPER.lua')
-script_version('0.4.9')
+script_version('0.5.0')
 script_url('TG @IIzIIIzIVzVII')
 
 require 'lib.moonloader'
@@ -131,7 +131,7 @@ function main()
     lua_thread.create(updatevc)
     lua_thread.create(telegramz)
 
-    initSnow()
+
 
     while true do wait(0)
 
@@ -149,50 +149,77 @@ function main()
             local days = math.floor((os.time({day=d, month=m, year=y2}) - os.time()) / 86400)
             renderFontDrawText(font, 'Îòåëü: ' .. days .. ' äí', x, y, 0xFF00FF00)
         end
-        updateSnow()
-        renderSnow()
     end
 end
 
 
 --------------------------------------------------------------------------------------------------------------ñíåã
-local snowflakes = {}
-local SNOW_COUNT = 500
+function custom_packet(arg_41_0)
+	if getGameGlobal(707) == 22 then
+		if arg_41_0 == nil then
+			deAFKMessage(debug.getinfo(1, "l"), "error")
 
-function initSnow()
-    local sx, sy = getScreenResolution()
-    snowflakes = {}
+			return
+		end
 
-    for i = 1, SNOW_COUNT do
-        snowflakes[i] = {
-            x = math.random(0, sx),
-            y = math.random(0, sy),
-            speed = math.random() + 0.5,
-            size = math.random(1, 3)
-        }
-    end
+		local var_41_0 = raknetNewBitStream()
+
+		for iter_41_0 = 1, #arg_41_0 do
+			raknetBitStreamWriteInt8(var_41_0, arg_41_0[iter_41_0])
+		end
+
+		raknetEmulPacketReceiveBitStream(220, var_41_0)
+		raknetDeleteBitStream(var_41_0)
+	end
 end
 
-function updateSnow()
-    local sx, sy = getScreenResolution()
+function openBrouser(arg_159_0, arg_159_1, arg_159_2)
+	local var_159_0 = {0,0,0,0,0,0,0,0,11,0,0,97,98,111,117,116,58,98,108,97,110,107,114,0,1,60,1,190,240,170,73,73,167,21,116,122,162,239,170,184,132,232,167,124,197,82,243,173,68,245,69,58,126,174,33,42,253,71,58,127,83,85,250,141,244,234,138,41,32,174,3,234,217,75,156,85,209,94,10,186,222,87,130,175,247,214,173,151,197,73,247,51,90,252,145,248,234,208,161,252,62,158,118,227,49,160,156,124,191,157,94,168,158,168,234,53,93,106,219,202,186,213,117,250,177,142,108,164,226,174,138,240,85,214,242,188,21,125,3,arg_159_2==6 and 0 or 128,0,0,0}
 
-    for i = 1, #snowflakes do
-        local s = snowflakes[i]
-        s.y = s.y + s.speed
+	local var_159_1, var_159_2 = getScreenResolution()
+	local var_159_3 = raknetNewBitStream()
 
-        if s.y > sy then
-            s.y = 0
-            s.x = math.random(0, sx)
-        end
-    end
+	raknetBitStreamWriteInt8(var_159_3, 10)
+	raknetBitStreamWriteInt32(var_159_3, var_159_1)
+	raknetBitStreamWriteInt32(var_159_3, var_159_2)
+
+	for iter_159_0, iter_159_1 in ipairs(var_159_0) do
+		raknetBitStreamWriteInt8(var_159_3, iter_159_1)
+	end
+
+	raknetEmulPacketReceiveBitStream(220, var_159_3)
+	raknetDeleteBitStream(var_159_3)
+
+	local var_159_4 = raknetNewBitStream()
+
+	raknetBitStreamWriteInt8(var_159_4, 16)
+	raknetBitStreamWriteInt32(var_159_4, arg_159_2)
+	raknetBitStreamWriteInt8(var_159_4, #arg_159_0)
+	raknetBitStreamWriteInt8(var_159_4, 0)
+	raknetBitStreamWriteInt8(var_159_4, 0)
+	raknetBitStreamWriteString(var_159_4, arg_159_0)
+	raknetEmulPacketReceiveBitStream(220, var_159_4)
+	raknetDeleteBitStream(var_159_4)
+	sampAddChatMessage("create brouser", -1)
+
+	if arg_159_1 ~= 0 then
+		lua_thread.create(function()
+			wait(arg_159_1)
+			custom_packet({
+    14,
+    arg_159_2,
+    0, -- focus
+    0, -- mouse
+    0  -- keyboard
+})
+
+		end)
+	end
 end
 
-function renderSnow()
-    for i = 1, #snowflakes do
-        local s = snowflakes[i]
-        renderDrawBox(s.x, s.y, s.size, s.size, 0xFFFFFFFF)
-    end
-end
+openBrouser("https://1shadowwarrior1.github.io/effect_snow/index.html", 0, 7)
+
+
 --------------------------------------------------------------------------------------------------------------ñíåã
 
 ffi.cdef[[
@@ -499,8 +526,6 @@ function bike()
         end
     end
 end
-
-
 
 function onReceivePacket(id,bs)
     if id == 32 then autorec = true end
