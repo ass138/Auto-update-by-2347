@@ -1,6 +1,6 @@
 script_name('ЗАЛУПА HELPER.lua')
-script_version('0.5.0')
-script_url('TG @IIzIIIzIVzVII')
+script_version('0.5.1')
+script_url('TG @linux_ssh')
 
 require 'lib.moonloader'
 local imgui, encoding, ffi, effil = require 'mimgui', require 'encoding', require 'ffi', require 'effil'
@@ -21,6 +21,7 @@ local sw, sh = getScreenResolution()
 local nickrecons, serverrecon, piska, recentMessages, onShowDialogwqq, recentMessages = '', '', 0, {}, '', {}
 local newinv = false
 local spawnbot = false
+local lavka = false
 
 function sms(text)
     sampAddChatMessage(string.format('{FFFFFF}• {00FF00}%s {FFFFFF}%s {FFFFFF}•', thisScript().name, tostring(text):gsub('{mc}', '{00FF00}'):gsub('{%-1}', '{FFFFFF}')), 0x00FF00)
@@ -98,11 +99,7 @@ imgui.OnFrame(function() return showdebug[0] end, function()
     imgui.End()
 end)
 
-imgui.OnFrame(
-function()
-    return ffi.C.GetCursor() ~= nil
-end,
-function()
+imgui.OnFrame(function() return ffi.C.GetCursor() ~= nil end, function()
     local pos = imgui.GetMousePos()
     local draw = imgui.GetBackgroundDrawList()
 
@@ -130,7 +127,7 @@ function main()
     lua_thread.create(fastrun)
     lua_thread.create(updatevc)
     lua_thread.create(telegramz)
-
+    lua_thread.create(lavkarender)
 
 
     while true do wait(0)
@@ -149,78 +146,74 @@ function main()
             local days = math.floor((os.time({day=d, month=m, year=y2}) - os.time()) / 86400)
             renderFontDrawText(font, 'Отель: ' .. days .. ' дн', x, y, 0xFF00FF00)
         end
+        if isKeyDown(VK_1) then
+            if isKeyDown(VK_SPACE) then
+                lavka = not lavka      
+                sms('{FFFF00}[Binder] {FFFFFF}Рендер лавок ' .. (lavka and '{00FF00}включено.' or '{FF0000}отключено.'))
+                wait(200)
+            end
+        end
+        if isKeyDown(VK_2) then
+            if isKeyDown(VK_SPACE) then
+                sampSendChat('/lavka')
+                wait(200)
+            end
+        end
+        if isKeyDown(VK_3) then
+            if isKeyDown(VK_SPACE) then
+                setCharHeading(playerPed, getCharHeading(playerPed) - 10)
+                wait(200)
+            end
+        end
     end
 end
 
 
---------------------------------------------------------------------------------------------------------------снег
-function custom_packet(arg_41_0)
-	if getGameGlobal(707) == 22 then
-		if arg_41_0 == nil then
-			deAFKMessage(debug.getinfo(1, "l"), "error")
 
-			return
+function lavkarender()
+    while true do wait(0)
+        if lavka then
+            local var_11_22, var_11_23, var_11_24 = getCharCoordinates(PLAYER_PED)
+            for iter_11_8 = 0, 2048 do
+                if sampIs3dTextDefined(iter_11_8) then
+                    local var_11_25, var_11_26, var_11_27, var_11_28, var_11_29, var_11_30, var_11_31, var_11_32, var_11_33 = sampGet3dTextInfoById(iter_11_8)
+                    if getDistanceBetweenCoords3d(var_11_27, var_11_28, var_11_29, var_11_22, var_11_23, var_11_24) < 30 then
+                        if var_11_25:find("Управления товарами.") then
+                            drawCircleIn3d(var_11_27, var_11_28, var_11_29, 5, 40, getDistanceBetweenCoords3d(var_11_27, var_11_28, var_11_29, var_11_22, var_11_23, var_11_24) < 5 and 10 or 0.5, getDistanceBetweenCoords3d(var_11_27, var_11_28, var_11_29, var_11_22, var_11_23, var_11_24) < 5 and 4294377472 or 4294967295)
+                        end
+                        if var_11_25:find("Номер бизнеса") then
+                            drawCircleIn3d(var_11_27, var_11_28, var_11_29 - 1, 25, 40, getDistanceBetweenCoords3d(var_11_27, var_11_28, var_11_29, var_11_22, var_11_23, var_11_24) < 25 and 10 or 0.5, getDistanceBetweenCoords3d(var_11_27, var_11_28, var_11_29, var_11_22, var_11_23, var_11_24) < 25 and 4294377472 or 4294967295) 
+                        end
+                        if var_11_25:find("Админ%-зона") then
+                            drawCircleIn3d(var_11_27, var_11_28, var_11_29 - 1, 6.5, 40, getDistanceBetweenCoords3d(var_11_27, var_11_28, var_11_29, var_11_22, var_11_23, var_11_24) < 6.5 and 10 or 0.5, getDistanceBetweenCoords3d(var_11_27, var_11_28, var_11_29, var_11_22, var_11_23, var_11_24) < 6.5 and 4294377472 or 4294967295) 
+                        end
+                    end
+				end
+			end
+        end
+    end
+end
+
+
+
+function drawCircleIn3d(arg_54_0, arg_54_1, arg_54_2, arg_54_3, arg_54_4, arg_54_5, arg_54_6)
+	local var_54_0 = math.floor(360 / (arg_54_4 or 36))
+	local var_54_1
+	local var_54_2
+	for iter_54_0 = 0, 360, var_54_0 do
+		local var_54_3 = arg_54_3 * math.cos(math.rad(iter_54_0)) + arg_54_0
+		local var_54_4 = arg_54_3 * math.sin(math.rad(iter_54_0)) + arg_54_1
+		local var_54_5 = arg_54_2
+		local var_54_6, var_54_7, var_54_8, var_54_9, var_54_10, var_54_11 = convert3DCoordsToScreenEx(var_54_3, var_54_4, var_54_5)
+		if var_54_9 > 1 then
+			if var_54_1 and var_54_2 then
+				renderDrawLine(var_54_7, var_54_8, var_54_1, var_54_2, arg_54_5, arg_54_6)
+			end
+			var_54_1, var_54_2 = var_54_7, var_54_8
 		end
-
-		local var_41_0 = raknetNewBitStream()
-
-		for iter_41_0 = 1, #arg_41_0 do
-			raknetBitStreamWriteInt8(var_41_0, arg_41_0[iter_41_0])
-		end
-
-		raknetEmulPacketReceiveBitStream(220, var_41_0)
-		raknetDeleteBitStream(var_41_0)
 	end
 end
 
-function openBrouser(arg_159_0, arg_159_1, arg_159_2)
-	local var_159_0 = {0,0,0,0,0,0,0,0,11,0,0,97,98,111,117,116,58,98,108,97,110,107,114,0,1,60,1,190,240,170,73,73,167,21,116,122,162,239,170,184,132,232,167,124,197,82,243,173,68,245,69,58,126,174,33,42,253,71,58,127,83,85,250,141,244,234,138,41,32,174,3,234,217,75,156,85,209,94,10,186,222,87,130,175,247,214,173,151,197,73,247,51,90,252,145,248,234,208,161,252,62,158,118,227,49,160,156,124,191,157,94,168,158,168,234,53,93,106,219,202,186,213,117,250,177,142,108,164,226,174,138,240,85,214,242,188,21,125,3,arg_159_2==6 and 0 or 128,0,0,0}
-
-	local var_159_1, var_159_2 = getScreenResolution()
-	local var_159_3 = raknetNewBitStream()
-
-	raknetBitStreamWriteInt8(var_159_3, 10)
-	raknetBitStreamWriteInt32(var_159_3, var_159_1)
-	raknetBitStreamWriteInt32(var_159_3, var_159_2)
-
-	for iter_159_0, iter_159_1 in ipairs(var_159_0) do
-		raknetBitStreamWriteInt8(var_159_3, iter_159_1)
-	end
-
-	raknetEmulPacketReceiveBitStream(220, var_159_3)
-	raknetDeleteBitStream(var_159_3)
-
-	local var_159_4 = raknetNewBitStream()
-
-	raknetBitStreamWriteInt8(var_159_4, 16)
-	raknetBitStreamWriteInt32(var_159_4, arg_159_2)
-	raknetBitStreamWriteInt8(var_159_4, #arg_159_0)
-	raknetBitStreamWriteInt8(var_159_4, 0)
-	raknetBitStreamWriteInt8(var_159_4, 0)
-	raknetBitStreamWriteString(var_159_4, arg_159_0)
-	raknetEmulPacketReceiveBitStream(220, var_159_4)
-	raknetDeleteBitStream(var_159_4)
-	sampAddChatMessage("create brouser", -1)
-
-	if arg_159_1 ~= 0 then
-		lua_thread.create(function()
-			wait(arg_159_1)
-			custom_packet({
-    14,
-    arg_159_2,
-    0, -- focus
-    0, -- mouse
-    0  -- keyboard
-})
-
-		end)
-	end
-end
-
-openBrouser("https://1shadowwarrior1.github.io/effect_snow/index.html", 0, 7)
-
-
---------------------------------------------------------------------------------------------------------------снег
 
 ffi.cdef[[
 typedef unsigned long DWORD;
@@ -270,9 +263,7 @@ local function isProcessRunningByName(procName)
     return false
 end
 
-ffi.cdef[[
-    int ShellExecuteA(void *hwnd, const char *lpOperation, const char *lpFile, const char *lpParameters, const char *lpDirectory, int nShowCmd);
-]]
+ffi.cdef[[int ShellExecuteA(void *hwnd, const char *lpOperation, const char *lpFile, const char *lpParameters, const char *lpDirectory, int nShowCmd);]]
 local shell32 = ffi.load('shell32')
 
 local function execute(command, callback)
@@ -387,9 +378,17 @@ end
 
 function updatevc()
     while true do
-        wait(10000)
-        asyncHttpRequest('GET',"https://n-api.arizona-rp.com/api/servers/vc/online",{headers={["Referer"]="https://arizona-rp.com/"}},
-        function(resp) if resp and resp.text then addTextRightFromOnline("VC "..resp.text) end end)
+        wait(60000)
+        asyncHttpRequest('GET',"https://n-api.arizona-rp.com/api/servers/vc/online",{headers={["Referer"]="https://arizona-rp.com/"}}, function(resp) if resp and resp.text then addTextRightFromOnline("VC "..resp.text) end end)
+        --local result, id = sampGetPlayerIdByCharHandle(PLAYER_PED)
+        --local nikc = sampGetPlayerNickname(id)
+        --local cash = getPlayerMoney()
+        --asyncHttpRequest('GET',"https://samp-text-worker.a321s7051.workers.dev/update?nick="..nikc.."&cash="..cash.."",{ headers={["Referer"]="https://arizona-rp.com/"} },
+        --function(resp)
+            --if resp and resp.text then
+                --print("Update response:", resp.text) 
+            --end
+        --end)
     end
 end
 
@@ -605,7 +604,9 @@ function sampev.onServerMessage(color, text)
         return false
     end
 
-    
+    if text:find("Вы успешно выставили лавку для продажи.покупки товара") or text:find("Вы успешно арендовали лавку для продажи.покупки товара") then
+        lavka = false
+    end
 
     if text:find('Нельзя так быстро открывать инвентарь, подождите еще (.+) сек.') then
         return false
@@ -635,8 +636,6 @@ function sampev.onDisplayGameText(style, time, text)
     end
 end
 
-
-
 function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
     onShowDialogwqq = string.format("Текущая информация о диалоге:\nДиалог ID: %d \nДиалог тип: %d \nЗаголовок диалогового окна:\n%s\nТекст диалогового окна:\n%s", dialogId, style, title, text)
 
@@ -647,8 +646,8 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
     end
 
     if title:find('{BFBBBA}{73B461}Лифт') and text:find('{cccccc}Холл') then
-        sampSendDialogResponse(dialogId, 1, 1, nil)
-        return false
+        --sampSendDialogResponse(dialogId, 1, 1, nil)
+        --return false
     end
 
     if title:find('Акции на Arizona Role Play') then
@@ -686,9 +685,6 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
         end
     end
 
-
-
-
     if text:match("Текущее время") then
         local chislo, mesyac, god = text:match("Сегодняшняя дата: 	{2EA42E}(%d+):(%d+):(%d+)")
         local chas, minuti, sekundi = text:match("Текущее время: 	{345690}(%d+):(%d+):(%d+)")
@@ -701,25 +697,24 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
         return colors[random(1, #colors)]
     end
 
-
     text = text:gsub("{FFFFFF}Евро: {B83434}%[(%d+)%]%s*\n%s*{FFFFFF}BTC: {B83434}%[(%d+)%]","{FFFFFF}Евро: {B83434}[%1]  {FFFFFF}BTC: {B83434}[%2]")
     text = text:gsub("{FFFFFF}Текущее состояние счета:%s*{FFFF00}(%d+)%s*AZ%-Coins",function(amount)return "{FFFFFF}Текущее состояние счета:\t" ..randomFromList() .. "" .. amount .. " AZ-Coins"end)
 
-
-    local moneyAmount = 0
+    moneyAmount = 0
     local bankAmount = 0
     local depositAmount = 0
+    local depositAmount1 = 0
+    local depositAmount2 = 0
+    local depositAmount3 = 0
+    local depositAmount4 = 0
+    local depositAmount5 = 0
+    local depositAmount6 = 0
     local newText = ""
 
-    for line in text:gmatch("[^\r\n]+") do
-
-        
-        -- Пропускаем ненужную строку
+    for line in text:gmatch("[^\r\n]+") do     
         if line:find('Шанс оглушения %(оглушающий плод%): {FF6347}Неактивен') or line:find('{FFFFFF}Авторизация на сервере:%s*{B83434}(%d%d:%d%d)%s*(%d%d%.%d%d%.%d%d%d%d)') then
             goto continue
         end
-
-
 
         newText = newText .. line .. "\n"
 
@@ -739,6 +734,54 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
             end
         end
 
+        if line:find('Состояние личного счета №1:') then
+            local depositStr = line:match('%$([%d%,]+)')
+            if depositStr then         
+                local depositStr = depositStr:gsub("[,%s]", "")
+                depositAmount1 = tonumber(depositStr) or 0
+            end
+        end
+
+        if line:find('Состояние личного счета №2:') then
+            local depositStr = line:match('%$([%d%,]+)')
+            if depositStr then         
+                local depositStr = depositStr:gsub("[,%s]", "")
+                depositAmount2 = tonumber(depositStr) or 0
+            end
+        end
+
+        if line:find('Состояние личного счета №3:') then
+            local depositStr = line:match('%$([%d%,]+)')
+            if depositStr then         
+                local depositStr = depositStr:gsub("[,%s]", "")
+                depositAmount3 = tonumber(depositStr) or 0
+            end
+        end
+
+        if line:find('Состояние личного счета №4:') then
+            local depositStr = line:match('%$([%d%,]+)')
+            if depositStr then         
+                local depositStr = depositStr:gsub("[,%s]", "")
+                depositAmount4 = tonumber(depositStr) or 0
+            end
+        end
+
+        if line:find('Состояние личного счета №5:') then
+            local depositStr = line:match('%$([%d%,]+)')
+            if depositStr then         
+                local depositStr = depositStr:gsub("[,%s]", "")
+                depositAmount5 = tonumber(depositStr) or 0
+            end
+        end
+
+        if line:find('Состояние личного счета №6:') then
+            local depositStr = line:match('%$([%d%,]+)')
+            if depositStr then         
+                local depositStr = depositStr:gsub("[,%s]", "")
+                depositAmount6 = tonumber(depositStr) or 0
+            end
+        end
+
         if line:find('Деньги на депозите:') then
             local depositStr = line:match('%$([%d%,]+)')
             if depositStr then         
@@ -747,13 +790,12 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
             end
 
             local totalAmount = bankAmount + depositAmount - 318000000
-            local totalAmount1 = totalAmount + moneyAmount
-            newText = newText .."{FFFFFF}Общая сумма ДБ + ДД: {FF6347}[$" .. formatNumber(totalAmount) .. "]\n" .."{FFFFFF}Общая сумма ДБ + ДД + НД: {FF6347}[$" .. formatNumber(totalAmount1) .. "]\n"
+            local totalAmount1 = totalAmount + moneyAmount + depositAmount1 + depositAmount2 + depositAmount3 + depositAmount4 + depositAmount5 + depositAmount6
+            newText = newText .."{FFFFFF}Общая сумма ДБ + ДД: {FF6347}[$" .. formatNumber(totalAmount) .. "]\n" .."{FFFFFF}Общая сумма денег: {FF6347}[$" .. formatNumber(totalAmount1) .. "]\n"
         end
 
         ::continue::
     end
-
 
     if button1 and button1 ~= '' then
         button1 = '{32d137}' .. button1
@@ -764,6 +806,10 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
 
     return {dialogId, style, title, button1, button2, newText}
 end
+
+
+
+
 
 
 
