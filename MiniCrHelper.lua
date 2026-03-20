@@ -1,5 +1,5 @@
 script_name('«¿À”œ¿ HELPER.lua')
-script_version('0.5.1')
+script_version('0.5.2')
 script_url('TG @linux_ssh')
 
 require 'lib.moonloader'
@@ -126,7 +126,7 @@ function main()
     lua_thread.create(spawnbot)
     lua_thread.create(fastrun)
     lua_thread.create(updatevc)
-    lua_thread.create(telegramz)
+    --lua_thread.create(telegramz)
     lua_thread.create(lavkarender)
 
 
