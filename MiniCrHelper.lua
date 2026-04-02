@@ -1,5 +1,5 @@
 script_name('«јЋ”ѕј HELPER.lua')
-script_version('0.5.2')
+script_version('0.5.3')
 script_url('TG @linux_ssh')
 
 require 'lib.moonloader'
@@ -15,7 +15,7 @@ local mainIni = inicfg.load({
 
 local new, str = imgui.new, ffi.string
 local font = renderCreateFont('Arial', 15, 14)
-local window, speedrunning, autoeat, autospawnbot, showdebug, debugwh3d = new.bool(), new.bool(mainIni.main.speedrunning), new.bool(mainIni.main.autoeat), new.bool(mainIni.main.autospawnbot), imgui.new.bool(), new.bool()
+local window, speedrunning, autoeat, autospawnbot, showdebug, debugwh3d = new.bool(), new.bool(mainIni.main.speedrunning), new.bool(mainIni.main.autoeat), new.bool(false), imgui.new.bool(), new.bool()
 local fastrunm = new.bool(mainIni.main.fastrunm)
 local sw, sh = getScreenResolution()
 local nickrecons, serverrecon, piska, recentMessages, onShowDialogwqq, recentMessages = '', '', 0, {}, '', {}
@@ -51,10 +51,10 @@ imgui.OnFrame(function() return window[0] end, function(player)
         inicfg.save(mainIni, "MiniCrHelper/MiniHelper-CR")
     end
 
-    if imgui.Checkbox(u8'јвто спавн охран при спавне (новый инв)', autospawnbot) then
+    --[[if imgui.Checkbox(u8'јвто спавн охран при спавне (новый инв)', autospawnbot) then
         mainIni.main.autospawnbot = autospawnbot[0]
         inicfg.save(mainIni, "MiniCrHelper/MiniHelper-CR")
-    end
+    end]]
 
     imgui.End()
 end)
@@ -123,7 +123,7 @@ function main()
     lua_thread.create(autoreconectrandom)
     lua_thread.create(wh3dtext)
     lua_thread.create(whplay)
-    lua_thread.create(spawnbot)
+    --lua_thread.create(spawnbot)
     lua_thread.create(fastrun)
     lua_thread.create(updatevc)
     --lua_thread.create(telegramz)
@@ -343,20 +343,25 @@ function evalcef(c,e)
     raknetDeleteBitStream(bs)
 end
 
-function addTextRightFromOnline(t)
+function addTextRightFromOnline(caption, value)
     evalanon(([[ 
         let b=document.querySelector('.player-info__users-online');
         if(!b)return;
         let e=b.querySelector('.custom-online-right');
-        let parts=`%s`.split(" ");
-        if(e){e.querySelector('.caption').innerText=parts[0]+":"; e.querySelector('.value').innerText=parts[1]||""; return;}
+        let cap = `%s`;
+        let val = `%s`;
+        if(e){
+            e.querySelector('.caption').innerText=cap+":"; 
+            e.querySelector('.value').innerText=val; 
+            return;
+        }
         let s=document.createElement('span');
         s.className='custom-online-right';
         s.style.marginLeft='10px';
         s.style.whiteSpace='nowrap';
-        s.innerHTML='<span class="player-info__user-id-caption caption">'+parts[0]+':</span> <span class="player-info__user-id-value value">'+(parts[1]||"")+'</span>';
+        s.innerHTML='<span class="player-info__user-id-caption caption">'+cap+':</span> <span class="player-info__user-id-value value">'+val+'</span>';
         b.querySelector('.player-info__users-online-count').after(s);
-    ]]):format(t))
+    ]]):format(caption, value))
 end
 
 function asyncHttpRequest(m,u,a,r,j)
@@ -379,16 +384,20 @@ end
 function updatevc()
     while true do
         wait(60000)
-        asyncHttpRequest('GET',"https://n-api.arizona-rp.com/api/servers/vc/online",{headers={["Referer"]="https://arizona-rp.com/"}}, function(resp) if resp and resp.text then addTextRightFromOnline("VC "..resp.text) end end)
-        --local result, id = sampGetPlayerIdByCharHandle(PLAYER_PED)
-        --local nikc = sampGetPlayerNickname(id)
-        --local cash = getPlayerMoney()
-        --asyncHttpRequest('GET',"https://samp-text-worker.a321s7051.workers.dev/update?nick="..nikc.."&cash="..cash.."",{ headers={["Referer"]="https://arizona-rp.com/"} },
-        --function(resp)
-            --if resp and resp.text then
-                --print("Update response:", resp.text) 
-            --end
-        --end)
+        asyncHttpRequest('GET', "https://api.arizona-five.com/launcher/servers", {headers={["Referer"]="https://arizona-rp.com/"}}, function(resp) 
+            if resp and resp.text then 
+                local status, data = pcall(decodeJson, resp.text)
+                if status and data and data.vc then
+                    for _, po in pairs(data.vc) do
+                        local online = po.online or 0
+                        local queue = po.queue or 0     
+                        local valueText = online .. "|" .. queue  
+                        addTextRightFromOnline("VC", valueText)                        
+                        break 
+                    end
+                end
+            end 
+        end)
     end
 end
 
@@ -410,7 +419,7 @@ function fastrun()
     end
 end
 
-function spawnbot()
+--[[function spawnbot()
     while true do wait(0)
         if spawnbot == true then
             sampSendChat("/invent")
@@ -421,7 +430,7 @@ function spawnbot()
             spawnbot = false
         end
     end
-end
+end]]
 
 
 function whplay()
